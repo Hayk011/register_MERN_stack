@@ -3,10 +3,10 @@ export interface IUser extends Document, IuserVo {
   _id: any;
 }
 interface IuserVo {
-  _id: any;
-  name: string;
-  password: string;
-  email: string;
+  _id?: any;
+  name?: string;
+  password?: string;
+  email?: string;
 }
 const schema = new Schema({
   name: {

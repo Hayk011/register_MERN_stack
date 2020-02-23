@@ -17,7 +17,7 @@ const Auth = () => {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ auth })
+      body: JSON.stringify({ email: auth.email, password: auth.password })
     });
     setAuth({ email: "", password: "" });
   };
