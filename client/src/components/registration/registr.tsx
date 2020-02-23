@@ -26,6 +26,7 @@ const Register = () => {
         password: form.password
       })
     });
+    setForm({ name: "", email: "", password: "" });
   };
   return (
     <div className="container">
@@ -34,7 +35,7 @@ const Register = () => {
         <div className="row">
           <div className="input-field offset m6">
             <input
-              id="first_name2"
+              id="first_name1"
               type="text"
               className="validate"
               name="name"
@@ -60,7 +61,7 @@ const Register = () => {
         <div className="row">
           <div className="input-field offset m6">
             <input
-              id="first_name2"
+              id="first_name3"
               type="password"
               className="validate"
               name="password"
