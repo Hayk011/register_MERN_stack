@@ -64,7 +64,7 @@ routr.post("/auth", async (req: Request, res: Response) => {
   if (!user) {
     res.status(400).json({ message: "wrong password or email" });
   }
-  const condedate = await bcrypt.compare(password, user.password);
+  const condedate: boolean = await bcrypt.compare(password, user.password);
   if (!condedate) {
     res.status(400).json({ message: "Password is wrong try again" });
   }

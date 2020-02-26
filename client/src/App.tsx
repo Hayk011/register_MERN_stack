@@ -1,17 +1,27 @@
 import React from "react";
-import "materialize-css";
 import Nav from "./components/nav/nav";
+import useAuth from "./components/hookss/auth";
+import useRouts from "./components/hookss/rout";
+import {AuthContext} from "./components/context/context";
+import { BrowserRouter } from "react-router-dom";
 import "./App.css";
-import { PromiseProvider } from "mongoose";
+import "materialize-css";
+function App() {
+    const {token, login, logOut, userId} = useAuth();
+    const isAuth = !!token;
+  const rout = useRouts(false);
+  const nav = Nav(false);
+    return (
 
-interface Iprops {
-  children: React.ReactNode;
-}
-function App(props: Iprops) {
-  return (
     <>
-      <Nav />
-      {props.children}
+        <AuthContext.Provider value = {{
+token, login , logOut , userId , isAuth
+        }}>
+      <BrowserRouter>
+        {nav}
+        {rout}
+      </BrowserRouter>
+        </AuthContext.Provider>
     </>
   );
 }
