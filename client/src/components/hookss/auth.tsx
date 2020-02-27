@@ -17,7 +17,7 @@ const useAuth = () => {
     localStorage.setItem(
       storageName,
       JSON.stringify({
-        userId: token
+        userId: id, token: jwttoken
       })
     );
   }, []);
@@ -32,7 +32,7 @@ const useAuth = () => {
       login(data.token, data.userId);
     }
   }, [login]);
-
+  console.log(token, userId);
   return { login, logOut, token, userId };
 };
 export default useAuth;

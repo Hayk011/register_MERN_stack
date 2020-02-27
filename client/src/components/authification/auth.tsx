@@ -1,9 +1,11 @@
 import React from "react";
+import { AuthContext } from "../context/context";
 interface IAuth {
   email: string;
   password: string;
 }
 const Auth = () => {
+  const context = React.useContext(AuthContext);
   const [auth, setAuth] = React.useState<IAuth>({
     email: "",
     password: ""
@@ -18,9 +20,11 @@ const Auth = () => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({ email: auth.email, password: auth.password })
-    });
+    }).then(res => res.json()).then(data => context.login(data.token, data.userId));
     setAuth({ email: "", password: "" });
   };
+  // context.login(data.token, data.id)
+  // console.log(context);
   return (
     <div className="container">
       <div className="registration-container">

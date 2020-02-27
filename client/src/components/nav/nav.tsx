@@ -1,7 +1,14 @@
 import React from "react";
 import "./nav.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
+import { AuthContext } from "../context/context";
+
 const Nav = (isAuth: boolean) => {
+  const context = React.useContext(AuthContext);
+  const exitHandler = (event: React.MouseEvent<HTMLLIElement>): void => {
+    event.preventDefault();
+    context.logOut();
+  };
   if (!isAuth) {
     return (
       <nav>
@@ -33,6 +40,9 @@ const Nav = (isAuth: boolean) => {
           </li>
           <li>
             <NavLink to="/video">Video</NavLink>
+          </li>
+          <li onClick={(event) => exitHandler(event)}>
+            <a href="/"> Exit </a>
           </li>
         </ul>
       </div>
