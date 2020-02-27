@@ -8,8 +8,7 @@ import * as React from "react";
 //     userId: string;
 // }
 export const AuthContext = React.createContext({
-    isAuth: false,
-    login: (token: string, id: string) => { },
-    logOut: () => { },
-    userId: null
+    isAuth: !!localStorage.getItem("token"),
+    userId: null,
+    setAuth: (isAuth: boolean) => {}
 });

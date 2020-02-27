@@ -1,6 +1,5 @@
 import React from "react";
 import Nav from "./components/nav/nav";
-import useAuth from "./components/hookss/auth";
 import useRouts from "./components/hookss/rout";
 import {AuthContext} from "./components/context/context";
 import {BrowserRouter, Route} from "react-router-dom";
@@ -8,17 +7,19 @@ import "./App.css";
 import "materialize-css";
 
 function App() {
-    const {login, logOut, userId} = useAuth();
-    const isAuth = !!localStorage.getItem("userData");
+    const [isAuth, setIsAuth] = React.useState<any>(!!localStorage.getItem("token"));
+    const userId = null;
+    const setAuth = (isAuth: boolean) => {
+        setIsAuth(isAuth);
+    };
     const rout = useRouts(isAuth);
-    // const nav = Nav(isAuth);
     return (
         <>
             <AuthContext.Provider value={{
-                login, logOut, userId, isAuth
+                userId, isAuth, setAuth
             }}>
                 <BrowserRouter>
-                    <Nav isAuth={isAuth}></Nav>
+                    <Nav></Nav>
                     {rout}
                 </BrowserRouter>
             </AuthContext.Provider>

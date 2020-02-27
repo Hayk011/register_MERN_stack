@@ -1,8 +1,8 @@
 import { Router, Request, Response } from "express";
 import User, { IUser } from "../../models/user";
-import Joi from "joi";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
+import * as Joi from "joi";
+import * as jwt from "jsonwebtoken";
+import * as bcrypt from "bcryptjs";
 const routr = Router();
 
 // registration
