@@ -3,13 +3,18 @@ import "./nav.css";
 import { NavLink, useHistory } from "react-router-dom";
 import { AuthContext } from "../context/context";
 
-const Nav = (isAuth: boolean) => {
+interface INav {
+  isAuth?: boolean;
+}
+
+function Nav(props: INav) {
   const context = React.useContext(AuthContext);
+  let  history = useHistory();
   const exitHandler = (event: React.MouseEvent<HTMLLIElement>): void => {
     event.preventDefault();
     context.logOut();
   };
-  if (!isAuth) {
+  if (!props.isAuth) {
     return (
       <nav>
         <div className="nav-wrapper green">

@@ -6,23 +6,24 @@ interface IData {
   token: string;
 }
 const useAuth = () => {
-  const [token, setToken] = React.useState(null);
+  // const [token, setToken] = React.useState(null);
   const [userId, setUserId] = React.useState(null);
 
   const login = React.useCallback((jwttoken: string, id: string) => {
     // @ts-ignore
-    setToken(jwttoken);
-    // @ts-ignore
-    setUserId(id);
+    // setToken(jwttoken);
+
     localStorage.setItem(
       storageName,
       JSON.stringify({
         userId: id, token: jwttoken
       })
     );
+    // @ts-ignore
+    setUserId(id);
   }, []);
   const logOut = React.useCallback(() => {
-    setToken(null);
+    // setToken(null);
     setUserId(null);
     localStorage.removeItem(storageName);
   }, []);
@@ -32,7 +33,6 @@ const useAuth = () => {
       login(data.token, data.userId);
     }
   }, [login]);
-  console.log(token, userId);
-  return { login, logOut, token, userId };
+  return { login, logOut, userId };
 };
 export default useAuth;
