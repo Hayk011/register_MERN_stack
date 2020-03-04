@@ -8,11 +8,13 @@ import "materialize-css";
 
 function App() {
     const [isAuth, setIsAuth] = React.useState<any>(!!localStorage.getItem("token"));
-    const userId = null;
-    const setAuth = (isAuth: boolean) => {
+    const [userId, setUserId] = React.useState<any>(null);
+    const setAuth = (isAuth: boolean, id: any) => {
         setIsAuth(isAuth);
+        setUserId(id);
     };
     const rout = useRouts(isAuth);
+    console.log("id", userId);
     return (
         <>
             <AuthContext.Provider value={{

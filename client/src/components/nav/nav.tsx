@@ -11,7 +11,7 @@ function Nav() {
     const exitHandler = (event: React.MouseEvent<HTMLLIElement>): void => {
         event.preventDefault();
         logout();
-        context.setAuth(false);
+        context.setAuth(false, null);
     };
 
     if (!context.isAuth) {
