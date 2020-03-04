@@ -15,7 +15,7 @@ const Register = () => {
     setForm({ ...form, [event.target.name]: event.target.value });
   };
   const sendHandler = async () => {
-    await fetch("http://localhost:5000/register", {
+    await fetch("http://localhost:8000/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

@@ -4,6 +4,7 @@ import Register from "../../components/registration/registr";
 import Auth from "../../components/authification/auth";
 import Curses from "../pages/curses";
 import Video from "../pages/video";
+import User from "../pages/userpage";
 const useRouts = (isAuth: boolean) => {
   if (!isAuth) {
     return (
@@ -15,8 +16,9 @@ const useRouts = (isAuth: boolean) => {
   }
   return (
     <Switch>
+        <Route path="/user/id" component={User} />
       <Route path="/curses" component={Curses} />
-      <Route path="/video" component={Video} />
+      <Route path="/add" component={Video} />
     </Switch>
   );
 };

@@ -19,7 +19,7 @@ function App() {
                 userId, isAuth, setAuth
             }}>
                 <BrowserRouter>
-                    <Nav></Nav>
+                    <Nav/>
                     {rout}
                 </BrowserRouter>
             </AuthContext.Provider>

@@ -2,12 +2,12 @@ import { Router, Request, Response } from "express";
 import User, { IUser } from "../../models/user";
 import * as Joi from "joi";
 import * as jwt from "jsonwebtoken";
-import * as bcrypt from "bcryptjs";
-const routr = Router();
+import * as barest from "bcryptjs";
+const router = Router();
 
 // registration
 
-routr.post("/register", async (req: Request, res: Response) => {
+router.post("/register", async (req: Request, res: Response) => {
   const { email, password, name } = req.body;
   const schema = Joi.object().keys({
     name: Joi.string()
@@ -25,21 +25,21 @@ routr.post("/register", async (req: Request, res: Response) => {
   });
   Joi.validate(req.body, schema, (err: Joi.ValidationError, result: any) => {
     if (err) {
-      return res.status(400).json({ messsage: "Something is wrong" });
+      return res.status(400).json({ message: "Something is wrong" });
     }
   });
-  const condidate: IUser = await User.findOne({ email });
-  if (condidate) {
+  const candidate: IUser = await User.findOne({ email });
+  if (candidate) {
     return res.status(500).json({ message: "user already exists" });
   }
-  const hashPassword: string = await bcrypt.hash(password, 12);
-  const newUser: IUser = new User({ name, email, password: hashPassword });
+  const hashPassword: string = await barest.hash(password, 12);
+  const newUser: IUser = new User({ name, email, password: hashPassword, cart: {items: []} });
   await newUser.save();
 });
 
 // auth
 
-routr.post("/auth", async (req: Request, res: Response) => {
+router.post("/auth", async (req: Request, res: Response) => {
   const { email, password } = req.body;
   const schema = Joi.object().keys({
     email: Joi.string()
@@ -56,7 +56,7 @@ routr.post("/auth", async (req: Request, res: Response) => {
     schema,
     (err: Joi.ValidationError, result: any) => {
       if (err) {
-        return res.status(400).json({ message: "Something is wrongg" });
+        return res.status(400).json({ message: "Something is wrong" });
       }
     }
   );
@@ -64,8 +64,8 @@ routr.post("/auth", async (req: Request, res: Response) => {
   if (!user) {
     res.status(400).json({ message: "wrong password or email" });
   }
-  const condedate: boolean = await bcrypt.compare(password, user.password);
-  if (!condedate) {
+  const candidate: boolean = await barest.compare(password, user.password);
+  if (!candidate) {
     res.status(400).json({ message: "Password is wrong try again" });
   }
   const token: string = jwt.sign({ userId: user.id }, "envision", {
@@ -74,4 +74,4 @@ routr.post("/auth", async (req: Request, res: Response) => {
   res.json({ token, userId: user.id });
 });
 
-export default routr;
+export default router;

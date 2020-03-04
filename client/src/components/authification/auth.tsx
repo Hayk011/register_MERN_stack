@@ -16,8 +16,6 @@ const Auth = () => {
     const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         setAuth({...auth, [event.target.name]: event.target.value});
     };
-
-
     // const loginHandler = async () => {
     //     await fetch("http://localhost:5000/auth", {
     //         method: "POST",
@@ -35,7 +33,7 @@ const Auth = () => {
     // console.log(context);
 
     const loginHandler = () => {
-        login(auth.email, auth.password, () => {
+        login(auth.email, auth.password,  () => {
             context.setAuth(true);
         });
     };

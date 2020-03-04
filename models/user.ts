@@ -1,4 +1,5 @@
-import { Schema, model, Document } from "mongoose";
+import { Schema, model, Document, Types } from "mongoose";
+import {array} from "joi";
 export interface IUser extends Document, IuserVo {
   _id: any;
 }
@@ -7,6 +8,12 @@ interface IuserVo {
   name?: string;
   password?: string;
   email?: string;
+  cart?: Icart[];
+}
+interface Icart {
+  curse: string;
+  price: number;
+  count: number;
 }
 const schema = new Schema({
   name: {
@@ -21,6 +28,22 @@ const schema = new Schema({
     type: String,
     unique: true,
     required: true
+  },
+  cart: {
+    items: [
+      {
+        curse: {
+          type: String,
+        },
+        price: {
+          type: Number
+        },
+        count: {
+          type: Number,
+          default: 0
+        }
+      }
+    ]
   }
 });
 export default model("User", schema);

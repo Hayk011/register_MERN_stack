@@ -1,5 +1,5 @@
 export function login(email: string, password: string, callback: (isAuth: boolean) => void) {
-    fetch("http://localhost:5000/auth", {
+    fetch("http://localhost:8000/auth", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -10,7 +10,6 @@ export function login(email: string, password: string, callback: (isAuth: boolea
         callback(true);
     });
 }
-
 export function logout() {
     localStorage.removeItem("token");
 }
