@@ -1,5 +1,5 @@
-export function login(email: string, password: string, callback: (isAuth: boolean, id: any) => void) {
-    fetch("http://localhost:8000/auth", {
+export function login(email: string, password: string, callback: (isAuth: boolean) => void) {
+    fetch("http://localhost:5000/auth", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -7,10 +7,12 @@ export function login(email: string, password: string, callback: (isAuth: boolea
         body: JSON.stringify({email: email, password: password})
     }).then(res => res.json()).then(data => {
         localStorage.setItem("token", data.token);
-        console.log(data);
-        callback(true,  data.userId);
-    });
+        if (data.token) {
+            callback(true);
+        }
+    }).catch(e => console.log(e));
 }
+
 export function logout() {
     localStorage.removeItem("token");
 }

@@ -4,16 +4,17 @@ import {NavLink} from "react-router-dom";
 import {AuthContext} from "../context/context";
 import {logout} from "../../service/AuthService";
 import User from "../pages/userpage";
+import {json} from "express";
 
 
 function Nav() {
     const context = React.useContext(AuthContext);
+    const [userName, setUserName] = React.useState<string>("");
     const exitHandler = (event: React.MouseEvent<HTMLLIElement>): void => {
         event.preventDefault();
         logout();
-        context.setAuth(false, null);
+        context.setAuth(false);
     };
-
     if (!context.isAuth) {
         return (
             <nav>
@@ -36,18 +37,18 @@ function Nav() {
     return (
         <nav>
             <div className="nav-wrapper green">
-                <NavLink to="/user/id" className="brand-logo">
+                <NavLink to="/user" className="brand-logo">
                     Logo
                 </NavLink>
                 <ul id="nav-mobile" className="right hide-on-med-and-down">
                     <li>
-                        <NavLink to="/user/id">user</NavLink>
+                        <NavLink to="/user">user</NavLink>
                     </li>
                     <li>
-                        <NavLink to="/curses">Curses</NavLink>
+                        <NavLink to="/user/curses">Curses</NavLink>
                     </li>
                     <li>
-                        <NavLink to="/add">Add</NavLink>
+                        <NavLink to="/user/add">Add</NavLink>
                     </li>
                     <li onClick={(event) => exitHandler(event)}>
                         <a href="/"> Exit </a>

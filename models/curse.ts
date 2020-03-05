@@ -1,12 +1,12 @@
 import {Schema, model , Document} from "mongoose";
-interface Icurse extends IcurseVo, Document  {
+export interface Icurse extends Document, IcurseVo {
     _id: any;
 }
 interface IcurseVo {
-    _id: any;
-    name: string;
-    image: string;
-    price: number;
+    _id?: any;
+    name?: string;
+    image?: string;
+    price?: string;
 }
 
 const schema = new Schema({
@@ -19,7 +19,7 @@ const schema = new Schema({
         require: true
     },
     price: {
-        type: Number,
+        type: String,
         require: true
     }
 });
