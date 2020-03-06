@@ -23,7 +23,7 @@ route.post("/user/curses/:id", (request: Request, response: Response) => {
                 userID = result.userId;
                 const user: IUser = await User.findById(userID);
                 const curse: Icurse = await Curses.findById(request.body.curseID);
-                const condedate: Icart[] = user.cart.items.filter((curs: Icart) => curs.id === request.body.curseID);
+                const condedate: Icart[] = user.cart.items.filter((curs: Icart) => curs.id === request.params.id);
                 if (condedate.length === 0) {
                     user.cart.items.push({curse: curse.name, count: 1, id: curse._id, price: curse.price});
                     user.save();
@@ -93,5 +93,39 @@ route.post("/user/basket", (request: Request, response: Response) => {
         console.log(e);
     }
 });
+
+
+route.delete("/user/basket", (request: Request, response: Response) => {
+    jwt.verify(request.body.token, "envision", async (err: Error, result: any) => {
+        if (err) {
+            response.status(403).json({errMwssage: "tour token is wrong"}).end();
+        } else {
+            try {
+                const user: IUser = await User.findById(result.userId);
+                const condidate = user.cart.items.filter((curs: Icart) => curs.id === request.body.curseId);
+
+                if (condidate[0].count > 1) {
+                    condidate[0].count -= 1;
+                    user.update(condidate[0], {$set: {cart: {items: []}}});
+                    user.save((err: Error, result: IUser) => {
+                        if (err) {
+                            response.status(500).json({errMessage: "something is wrong"}).end();
+                        } else {
+                            response.status(200).json({message: "successful"}).end();
+                        }
+                    });
+                } else {
+
+                }
+                console.log(condidate);
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
+    });
+    // console.log(request.body);
+});
+
 
 export default route;

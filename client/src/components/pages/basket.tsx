@@ -1,5 +1,6 @@
 import * as  React from "react";
 import {IBasketClient} from "../../../../routs/interfaces/interfaces";
+import {ItemDeleteServerHandler} from "../../service/BasketService";
 
 const Basket = () => {
     const [basket, setBasket] = React.useState<IBasketClient[]>([]);
@@ -18,7 +19,10 @@ const Basket = () => {
     }, []);
     const deleteHandler = (index: number) => {
         console.log(index);
+        const curseId: string = String(basket[index].id);
+        ItemDeleteServerHandler(curseId);
     };
+    console.log(basket);
     return (
         <div className="container">
             <h1>Basket</h1>
