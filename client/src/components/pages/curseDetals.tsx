@@ -1,6 +1,7 @@
 import React from "react";
 import {Link, RouteComponentProps} from "react-router-dom";
 import {IAllCursessClient} from "../../../../routs/interfaces/interfaces";
+import BuyHandler from "../../service/BuyService";
 
 interface IProps extends RouteComponentProps<{ id: string }> {
 }
@@ -14,7 +15,11 @@ const CurseDetals = (props: IProps) => {
             .then(data => setCurse(data.data))
             .catch((err) => console.log(err));
     }, []);
-    console.log(curse);
+
+    const buy = () => {
+        BuyHandler(props.match.params.id, curse._id, localStorage.getItem("token"));
+    };
+
     return (
         <div className="container">
             <h1>Curse Detals</h1>
@@ -30,7 +35,7 @@ const CurseDetals = (props: IProps) => {
                         </div>
                         <div className="card-action">
                             <Link to="/user/curses">Back To Curses</Link>
-                            <button className="btn primry red">Buy</button>
+                            <button onClick={buy} className="btn primry red">Buy</button>
                         </div>
                     </div>
                 </div>

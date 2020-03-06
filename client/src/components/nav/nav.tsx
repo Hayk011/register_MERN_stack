@@ -42,13 +42,16 @@ function Nav() {
                 </NavLink>
                 <ul id="nav-mobile" className="right hide-on-med-and-down">
                     <li>
-                        <NavLink to="/user">user</NavLink>
+                        <NavLink to="/user">User</NavLink>
                     </li>
                     <li>
                         <NavLink to="/user/curses">Curses</NavLink>
                     </li>
                     <li>
                         <NavLink to="/user/add">Add</NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/user/basket">Basket</NavLink>
                     </li>
                     <li onClick={(event) => exitHandler(event)}>
                         <a href="/"> Exit </a>

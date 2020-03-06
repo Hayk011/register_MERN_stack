@@ -6,6 +6,7 @@ import Curses from "../pages/curses";
 import Add from "../pages/add";
 import User from "../pages/userpage";
 import CurseDetals from "../pages/curseDetals";
+import Basket from "../pages/basket";
 
 const useRouts = (isAuth: boolean) => {
     if (!isAuth) {
@@ -18,10 +19,11 @@ const useRouts = (isAuth: boolean) => {
     }
     return (
         <Switch>
-            <Route exact  path="/user/curses"  component={Curses}/>
             <Route path="/user/curses/:id" component={CurseDetals}/>
+            <Route path="/user/curses" component={Curses}/>
             <Route path="/user/add" component={Add}/>
-            <Route exact path="/user"  component={User}/>
+            <Route path="/user/basket" component={Basket}/>
+            <Route path="/user" component={User}/>
         </Switch>
     );
 };

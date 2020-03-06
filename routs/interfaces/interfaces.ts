@@ -16,3 +16,11 @@ export interface IAllCursessClient {
     price?: string;
     image?: string;
 }
+
+export interface IBasketClient {
+    _id?: any;
+    curse?: string;
+    id?: string;
+    price?: string;
+    count?: number;
+}
