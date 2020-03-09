@@ -18,9 +18,19 @@ const Basket = () => {
             .catch(e => console.log(e));
     }, []);
     const deleteHandler = (index: number) => {
-        console.log(index);
         const curseId: string = String(basket[index].id);
-        ItemDeleteServerHandler(curseId);
+        if (Number(basket[index].count) > 1) {
+            let curse: IBasketClient[] = [...basket];
+            // @ts-ignore
+            curse[index].count = curse[index].count -= 1;
+            ItemDeleteServerHandler(curseId);
+            setBasket([...curse]);
+            console.log(index);
+        } else {
+            const deletedCurse = basket.filter((item: IBasketClient) => item.id !== curseId);
+            ItemDeleteServerHandler(curseId);
+            setBasket(deletedCurse);
+        }
     };
     console.log(basket);
     return (
@@ -51,7 +61,6 @@ const Basket = () => {
                 }
                 </tbody>
             </table>
-
         </div>
     );
 };

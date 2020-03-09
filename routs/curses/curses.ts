@@ -7,6 +7,8 @@ import {ValidationResult} from "@hapi/joi";
 import {ICurseAdd} from "../interfaces/interfaces";
 
 const route = Router();
+
+
 route.get("/user/curses", async (request: Request, response: Response) => {
     const curses: Icurse[] = await Curses.find({});
     response.json({curses});
@@ -31,8 +33,13 @@ route.post("/user/curses/:id", (request: Request, response: Response) => {
                 } else {
                     condedate[0].count += 1;
                     user.update(condedate[0], {$set: {cart: {items: []}}});
-                    user.save();
-                    response.status(200).json({message: "successful"}).end();
+                    user.save((err: Error, result: IUser) => {
+                        if (err) {
+                            response.status(403).json({errMessage: "something is wrong"}).end();
+                        } else {
+                            response.status(200).json({message: "data saved successfully"}).end();
+                        }
+                    });
                 }
             }
         } catch (e) {
@@ -42,6 +49,7 @@ route.post("/user/curses/:id", (request: Request, response: Response) => {
     });
 });
 
+
 route.get("/user/curses/:id", async (request: Request, response: Response) => {
 
     try {
@@ -50,8 +58,8 @@ route.get("/user/curses/:id", async (request: Request, response: Response) => {
     } catch (e) {
         console.log(e);
     }
-
 });
+
 
 route.post("/user/add", (request: Request, response: Response) => {
     const {name, price, image} = request.body;
@@ -76,6 +84,7 @@ route.post("/user/add", (request: Request, response: Response) => {
         });
     }
 });
+
 
 route.post("/user/basket", (request: Request, response: Response) => {
     let userID: string = "";
@@ -115,16 +124,20 @@ route.delete("/user/basket", (request: Request, response: Response) => {
                         }
                     });
                 } else {
-
+                    user.cart.items = user.cart.items.filter((item: Icart) => item.id !== request.body.curseId);
+                    user.save((err: Error, result: IUser) => {
+                        if (err) {
+                            response.status(403).json({errMessage: "something is wrong"}).end();
+                        } else {
+                            response.status(200).json({message: "changes saved "}).end();
+                        }
+                    });
                 }
-                console.log(condidate);
             } catch (e) {
                 console.log(e);
             }
         }
-
     });
-    // console.log(request.body);
 });
 
 
