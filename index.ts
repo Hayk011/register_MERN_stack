@@ -13,7 +13,7 @@ const start = async () => {
   try {
     await mongoose.connect(
       `mongodb+srv://hayk:3706884262@cluster0-be1lf.mongodb.net/test?retryWrites=true&w=majority`,
-      { useNewUrlParser: true, useUnifiedTopology: true }
+      { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: true }
     );
     app.listen(5000, () => {
       console.log("Server is runing");

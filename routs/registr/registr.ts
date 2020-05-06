@@ -1,4 +1,4 @@
-import {Router, Request, Response, response} from "express";
+import {Router, Request, Response} from "express";
 import User, {IUser} from "../../models/user";
 import * as Joi from "@hapi/joi";
 import * as jwt from "jsonwebtoken";
@@ -66,7 +66,7 @@ router.post("/auth", async (req: Request, res: Response) => {
             .max(20)
             .required()
     });
-    let ValidationResult: Joi.ValidationResult<{ email: string, password: string }> = schema.validate(req.body);
+    let ValidationResult: Joi.ValidationResult<{email: string, password: string}> = schema.validate(req.body);
 
     if (ValidationResult.error) {
         res.status(400).json({errorMessage: ValidationResult.error.message}).end();

@@ -21,20 +21,19 @@
   },
   "homepage": "https://github.com/Hayk011/register_MERN_stack#readme",
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
     "bcryptjs": "^2.4.3",
     "concurrently": "^5.1.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.9.2",
-    "@hapi/joi": "16.1.8"
+    "mongoose": "^5.9.2"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/cors": "^2.8.6",
-    "@types/hapi__joi": "15.0.4",
-    "@types/joi": "^14.3.4",
     "@types/jsonwebtoken": "^8.3.7",
+    "@types/hapi__joi": "15.0.4",
     "@types/express": "^4.17.2",
     "@types/mongoose": "^5.7.1",
     "@types/node": "^13.7.4",

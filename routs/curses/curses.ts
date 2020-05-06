@@ -10,8 +10,13 @@ const route = Router();
 
 
 route.get("/user/curses", async (request: Request, response: Response) => {
-    const curses: Icurse[] = await Curses.find({});
-    response.json({curses});
+    Curses.find({}, (err: Error, curses: Icurse[]) => {
+        if (err) {
+            throw err;
+        } else {
+            response.json({curses}).end();
+        }
+    });
 });
 
 route.post("/user/curses/:id", (request: Request, response: Response) => {
@@ -51,13 +56,14 @@ route.post("/user/curses/:id", (request: Request, response: Response) => {
 
 
 route.get("/user/curses/:id", async (request: Request, response: Response) => {
-
-    try {
-        const onlyCurse: Icurse = await Curses.findById(request.params.id);
-        response.json({data: onlyCurse}).end();
-    } catch (e) {
-        console.log(e);
-    }
+    Curses.findById(request.params.id, (err, curse: Icurse) => {
+        if (err) {
+            response.json({message: "error"}).end();
+            throw err;
+        } else {
+            response.json({data: curse}).end();
+        }
+    });
 });
 
 
@@ -74,12 +80,11 @@ route.post("/user/add", (request: Request, response: Response) => {
     if (validationResult.error) {
         response.status(400).json({errorMessage: validationResult.error.message}).end();
     } else {
-        const curse: Icurse = new Curses({name, price, image, cart: {items: []}});
-        curse.save((err: Error, data: {}) => {
+        Curses.create({name, price, image}, (err: Error, curse: Icurse) => {
             if (err) {
-                response.status(400).json({message: err.message}).end();
+                response.json({message: err.message}).end();
             } else {
-                response.status(200).json({message: "successful"}).end();
+                response.json({message: "successful"}).end();
             }
         });
     }
@@ -87,20 +92,19 @@ route.post("/user/add", (request: Request, response: Response) => {
 
 
 route.post("/user/basket", (request: Request, response: Response) => {
-    let userID: string = "";
-    try {
-        jwt.verify(request.body.token, "envision", async (err: Error, result: any) => {
-
-            if (err) {
-                response.status(403).json({errMessage: "your token is wrong "}).end();
-            } else {
-                const user: IUser = await User.findById(result.userId);
-                response.status(200).json({cart: user.cart}).end();
-            }
-        });
-    } catch (e) {
-        console.log(e);
-    }
+    jwt.verify(request.body.token, "envision", async (err: Error, result: any) => {
+        if (err) {
+            response.status(403).json({errMessage: "your token is wrong "}).end();
+        } else {
+            User.findById(result.userId, (err, user: IUser) => {
+                if (err) {
+                    throw err;
+                } else {
+                    response.status(200).json({cart: user.cart}).end();
+                }
+            });
+        }
+    });
 });
 
 
@@ -109,32 +113,27 @@ route.delete("/user/basket", (request: Request, response: Response) => {
         if (err) {
             response.status(403).json({errMwssage: "tour token is wrong"}).end();
         } else {
-            try {
-                const user: IUser = await User.findById(result.userId);
-                const condidate = user.cart.items.filter((curs: Icart) => curs.id === request.body.curseId);
+            const user: IUser = await User.findById(result.userId);
+            const condidate = user.cart.items.filter((curs: Icart) => curs.id === request.body.curseId);
 
-                if (condidate[0].count > 1) {
-                    condidate[0].count -= 1;
-                    user.update(condidate[0], {$set: {cart: {items: []}}});
-                    user.save((err: Error, result: IUser) => {
-                        if (err) {
-                            response.status(500).json({errMessage: "something is wrong"}).end();
-                        } else {
-                            response.status(200).json({message: "successful"}).end();
-                        }
-                    });
-                } else {
-                    user.cart.items = user.cart.items.filter((item: Icart) => item.id !== request.body.curseId);
-                    user.save((err: Error, result: IUser) => {
-                        if (err) {
-                            response.status(403).json({errMessage: "something is wrong"}).end();
-                        } else {
-                            response.status(200).json({message: "changes saved "}).end();
-                        }
-                    });
-                }
-            } catch (e) {
-                console.log(e);
+            if (condidate[0].count > 1) {
+                condidate[0].count -= 1;
+                user.update(condidate[0], {$set: {cart: {items: []}}});
+                user.save((err: Error, result: IUser) => {
+                    if (err) {
+                        response.status(500).json({errMessage: "something is wrong"}).end();
+                    } else {
+                        response.status(200).json({message: "successful"}).end();
+                    }
+                });
+            } else {
+                User.findByIdAndUpdate({_id: result.userId}, {$pull: {"cart.items": {id: request.body.curseId}}}, (err: Error, deleted: {}) => {
+                    if (err) {
+                        response.json({message: err.message}).end();
+                    } else {
+                        response.json({message: "Item deleted successfully"}).end();
+                    }
+                });
             }
         }
     });
