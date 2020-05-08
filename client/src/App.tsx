@@ -13,7 +13,6 @@ function App() {
         setIsAuth(isAuth);
     };
     const rout = useRouts(isAuth);
-    console.log(isAuth)
     return (
         <>
             <AuthContext.Provider value={{

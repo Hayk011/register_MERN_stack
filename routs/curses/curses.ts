@@ -1,10 +1,12 @@
-import {Router, Request, Response} from "express";
+import {Router, Request, Response, NextFunction} from "express";
 import * as Joi from "@hapi/joi";
 import Curses, {Icurse} from "../../models/curse";
 import User, {IUser, Icart} from "../../models/user";
 import * as jwt from "jsonwebtoken";
 import {ValidationResult} from "@hapi/joi";
 import {ICurseAdd} from "../interfaces/interfaces";
+import {orderSchema, Iorder} from "../curses/Validation/validator";
+import Transaction from "../../models/transactions";
 
 const route = Router();
 
@@ -107,6 +109,29 @@ route.post("/user/basket", (request: Request, response: Response) => {
     });
 });
 
+route.post("user/basket/order", (request: Request, response: Response, next: NextFunction) => {
+    const validationResult: ValidationResult<Iorder> = orderSchema.validate(request.body);
+    if (validationResult.error) {
+        response.json({message: validationResult.error.message}).end();
+        throw validationResult.error;
+    } else {
+        jwt.verify(request.body.token, "envision", (err: Error, result: any) => {
+            if (err) {
+                response.json({message: "something is wrong"}).end();
+            } else {
+                User.findById(result.userId, (err: Error, user: IUser) => {
+                    if (err) {
+                        response.json({message: "User not found"}).end();
+                    } else {
+                    if (user.cart.items.length > 0) {
+                        let sum: number = 0;
+                    }
+                    }
+                });
+            }
+        });
+    }
+});
 
 route.delete("/user/basket", (request: Request, response: Response) => {
     jwt.verify(request.body.token, "envision", async (err: Error, result: any) => {

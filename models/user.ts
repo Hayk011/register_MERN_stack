@@ -9,6 +9,7 @@ interface IuserVo {
     name?: string;
     password?: string;
     email?: string;
+    balance?: number;
     cart?: {items: Icart[]};
 }
 
@@ -32,6 +33,10 @@ const schema = new Schema({
         type: String,
         unique: true,
         required: true
+    },
+    balance: {
+      type: Number,
+      default: 30000
     },
     cart: {
         items: [
