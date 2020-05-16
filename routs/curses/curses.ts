@@ -6,7 +6,8 @@ import * as jwt from "jsonwebtoken";
 import {ValidationResult} from "@hapi/joi";
 import {ICurseAdd} from "../interfaces/interfaces";
 import {orderSchema, Iorder} from "../curses/Validation/validator";
-import Transaction from "../../models/transactions";
+import {getUser, transfer, createCheck} from "./Task/task";
+
 
 const route = Router();
 
@@ -23,7 +24,6 @@ route.get("/user/curses", async (request: Request, response: Response) => {
 
 route.post("/user/curses/:id", (request: Request, response: Response) => {
     let userID: string = "";
-    // console.log(request.body);
     jwt.verify(request.body.token, "envision", async (err: any, result: any) => {
         try {
             if (err) {
@@ -109,7 +109,7 @@ route.post("/user/basket", (request: Request, response: Response) => {
     });
 });
 
-route.post("user/basket/order", (request: Request, response: Response, next: NextFunction) => {
+route.post("/user/basket/order", (request: Request, response: Response, next: NextFunction) => {
     const validationResult: ValidationResult<Iorder> = orderSchema.validate(request.body);
     if (validationResult.error) {
         response.json({message: validationResult.error.message}).end();
@@ -119,13 +119,23 @@ route.post("user/basket/order", (request: Request, response: Response, next: Nex
             if (err) {
                 response.json({message: "something is wrong"}).end();
             } else {
-                User.findById(result.userId, (err: Error, user: IUser) => {
+                getUser(result.userId, (err: Error, user?: { user: IUser, balance: number }): void => {
                     if (err) {
-                        response.json({message: "User not found"}).end();
+                        response.json({message: err.message}).end();
                     } else {
-                    if (user.cart.items.length > 0) {
-                        let sum: number = 0;
-                    }
+                        transfer(user.user._id, user.balance, (err: Error, data) => {
+                            if (err) {
+                                response.json({message: err.message}).status(404).end();
+                            } else {
+                                createCheck(data, (err: Error, check: any) => {
+                                    if (err) {
+                                        response.json({message: err.message}).status(405).end();
+                                    } else {
+                                        response.json({message: "Thanks for your order!!!"}).status(200).end();
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
             }
@@ -136,19 +146,18 @@ route.post("user/basket/order", (request: Request, response: Response, next: Nex
 route.delete("/user/basket", (request: Request, response: Response) => {
     jwt.verify(request.body.token, "envision", async (err: Error, result: any) => {
         if (err) {
-            response.status(403).json({errMwssage: "tour token is wrong"}).end();
+            response.status(403).json({errMwssage: "your token is wrong"}).end();
         } else {
             const user: IUser = await User.findById(result.userId);
-            const condidate = user.cart.items.filter((curs: Icart) => curs.id === request.body.curseId);
+            const idx = user.cart.items.findIndex((curs: Icart) => curs.id === request.body.curseId);
 
-            if (condidate[0].count > 1) {
-                condidate[0].count -= 1;
-                user.update(condidate[0], {$set: {cart: {items: []}}});
-                user.save((err: Error, result: IUser) => {
+            if (user.cart.items[idx].count > 1) {
+                user.cart.items[idx].count -= 1;
+                user.save( (err: Error, user: IUser) => {
                     if (err) {
-                        response.status(500).json({errMessage: "something is wrong"}).end();
+                        response.json({message: err.message}).status(405).end();
                     } else {
-                        response.status(200).json({message: "successful"}).end();
+                        response.json({message: "ok"}).status(405).end();
                     }
                 });
             } else {

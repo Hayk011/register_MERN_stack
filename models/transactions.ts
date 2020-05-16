@@ -6,30 +6,26 @@ const transaction = new Schema({
         required: true,
         ref: "User"
     },
-    tptalPrice: {
+    totalPrice: {
         type: Number,
         required: true,
     },
     items: [
         {
-            name: {
-                type: String,
-                required: true
-            },
             count: {
-                type: String,
+                type: Number,
                 required: true
             },
             price: {
                 type: Number,
                 required: true
             },
-            id: {
-                type: Types.ObjectId,
+            courseId: {
+                type: String,
                 required: true
             }
         }
     ]
 });
 
-export default model("Transactions", transaction);
+export default model("Transaction", transaction);

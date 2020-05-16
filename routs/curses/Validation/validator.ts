@@ -6,7 +6,5 @@ export interface Iorder {
     count: number;
 }
 export const  orderSchema = Joi.object({
-    userId: Joi.string().required(),
-    courseId: Joi.string().required(),
-    count: Joi.number().required(),
+  token: Joi.string().required()
 });

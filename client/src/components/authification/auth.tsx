@@ -33,8 +33,8 @@ const Auth = () => {
     // console.log(context);
 
     const loginHandler = () => {
-        login(auth.email, auth.password,  () => {
-            context.setAuth(true);
+        login(auth.email, auth.password,  (isAuth: boolean) => {
+            context.setAuth(isAuth);
         });
     };
 

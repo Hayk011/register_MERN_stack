@@ -14,6 +14,7 @@ interface IuserVo {
 }
 
 export interface Icart {
+    _id?: any;
     id?: any;
     curse?: string;
     price?: string;

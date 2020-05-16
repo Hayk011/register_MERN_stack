@@ -1,4 +1,4 @@
-import {Router, Request, Response} from "express";
+import {Router, Request, Response, NextFunction} from "express";
 import User, {IUser} from "../../models/user";
 import * as Joi from "@hapi/joi";
 import * as jwt from "jsonwebtoken";
@@ -11,7 +11,6 @@ const router = Router();
 
 router.post("/register", async (req: Request, res: Response) => {
     const {email, password, name} = req.body;
-    console.log(req.body);
     const schema = Joi.object().keys({
         name: Joi.string()
             .min(2)
@@ -66,7 +65,7 @@ router.post("/auth", async (req: Request, res: Response) => {
             .max(20)
             .required()
     });
-    let ValidationResult: Joi.ValidationResult<{email: string, password: string}> = schema.validate(req.body);
+    let ValidationResult: Joi.ValidationResult<{ email: string, password: string }> = schema.validate(req.body);
 
     if (ValidationResult.error) {
         res.status(400).json({errorMessage: ValidationResult.error.message}).end();
@@ -81,7 +80,7 @@ router.post("/auth", async (req: Request, res: Response) => {
             return res.status(400).json({message: "Password is wrong try again"}).end();
         }
         const token: string = jwt.sign({userId: user.id}, "envision", {
-            expiresIn: "1h"
+            expiresIn: "3h"
         });
         res.json({token, userId: user.id});
     }
